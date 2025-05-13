@@ -3,8 +3,13 @@ from django.db import models
 
 class User(AbstractUser):
     can_be_contacted = models.BooleanField(default=False)
+    age = models.PositiveIntegerField(null=True, blank=True)
+
+    def is_minor(self):
+        return self.age is not None and self.age < 15
 
 class Project(models.Model):
+    id = models.AutoField(primary_key=True)
     TYPE_CHOICES = [('back', 'Back-end'), ('front', 'Front-end'), ('iOS', 'iOS'), ('android', 'Android')]
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -17,6 +22,7 @@ class Contributor(models.Model):
     role = models.CharField(max_length=20)
 
 class Issue(models.Model):
+    id = models.AutoField(primary_key=True)
     TAG_CHOICES = [('bug', 'Bug'), ('task', 'Task'), ('upgrade', 'Upgrade')]
     PRIORITY_CHOICES = [('low', 'Low'), ('medium', 'Medium'), ('high', 'High')]
     STATUS_CHOICES = [('to-do', 'To Do'), ('in-progress', 'In Progress'), ('done', 'Done')]
@@ -30,6 +36,7 @@ class Issue(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
 class Comment(models.Model):
+    id = models.AutoField(primary_key=True)
     description = models.TextField()
     author_user = models.ForeignKey(User, on_delete=models.CASCADE)
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
