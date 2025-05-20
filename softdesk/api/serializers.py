@@ -39,3 +39,18 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
+
+    def validate(self, data):
+        issue = data.get('issue')
+        author = data.get('author_user')
+
+        # On vérifie que l’issue est bien définie
+        if not issue:
+            raise serializers.ValidationError("Une issue doit être spécifiée.")
+
+        # Vérifier que l’auteur est contributeur du projet lié à l’issue
+        project = issue.project
+        if not Contributor.objects.filter(user=author, project=project).exists():
+            raise serializers.ValidationError("L'auteur doit être un contributeur du projet lié à cette issue.")
+
+        return data

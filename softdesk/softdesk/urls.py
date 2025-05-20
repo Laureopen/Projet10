@@ -1,12 +1,16 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_nested import routers
-from api.views import ProjectViewSet, ContributorViewSet, IssueViewSet, CommentViewSet
+from api.views import ProjectViewSet, ContributorViewSet, IssueViewSet, CommentViewSet, UserViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 # Route principale : /api/projects/
 router = routers.DefaultRouter()
 router.register(r'projects', ProjectViewSet, basename='project')
+router.register(r'contributors', ContributorViewSet, basename='contributor')
+router.register(r'issues', IssueViewSet, basename='issue')
+router.register(r'comments', CommentViewSet, basename='comment')
+router.register(r'users', UserViewSet, basename='user')
 
 # Routes imbriquées : /api/projects/{project_id}/contributors/
 project_router = routers.NestedDefaultRouter(router, r'projects', lookup='project')

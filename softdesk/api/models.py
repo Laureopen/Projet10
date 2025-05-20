@@ -3,6 +3,7 @@ from django.db import models
 
 class User(AbstractUser):
     can_be_contacted = models.BooleanField(default=False)
+    can_data_be_shared = models.BooleanField(default=False)
     age = models.PositiveIntegerField(null=True, blank=True)
 
     def is_minor(self):
@@ -19,7 +20,7 @@ class Project(models.Model):
 class Contributor(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    role = models.CharField(max_length=20)
+
 
 class Issue(models.Model):
     id = models.AutoField(primary_key=True)
@@ -34,6 +35,7 @@ class Issue(models.Model):
     author_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='issues_created')
     assignee_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='issues_assigned')
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)
