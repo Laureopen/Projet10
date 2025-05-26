@@ -1,0 +1,10 @@
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+class User(AbstractUser):
+    can_be_contacted = models.BooleanField(default=False)
+    can_data_be_shared = models.BooleanField(default=False)
+    age = models.PositiveIntegerField(null=True, blank=True)
+
+    def is_minor(self):
+        return self.age is not None and self.age < 15

@@ -126,11 +126,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Ajout de l'application 'api' et DRF
 INSTALLED_APPS += [
     'rest_framework',
-    'api',
+    #'api',
+    'projects',
+    'users'
 ]
 
 # Configuration de l'utilisateur personnalisé
-AUTH_USER_MODEL = 'api.User'
+AUTH_USER_MODEL = 'users.User'
 
 # Configuration DRF
 REST_FRAMEWORK = {
