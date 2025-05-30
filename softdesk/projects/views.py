@@ -8,6 +8,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def perform_create(self, serializer):
+        # Récupère l'utilisateur depuis le token (grâce à DRF)
+        user = self.request.user
+        serializer.save(author=user)  # Attribue automatiquement l'auteur
+
+
 class ContributorViewSet(viewsets.ModelViewSet):
     queryset = Contributor.objects.all()
     serializer_class = ContributorSerializer
