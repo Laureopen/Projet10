@@ -126,6 +126,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Ajout de l'application 'api' et DRF
 INSTALLED_APPS += [
     'rest_framework',
+    'rest_framework_simplejwt',
     #'api',
     'projects',
     'users'
