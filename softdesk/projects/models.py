@@ -3,7 +3,6 @@ from users.models import User
 
 
 class Project(models.Model):
-    id = models.AutoField(primary_key=True)
     TYPE_CHOICES = [('back', 'Back-end'), ('front', 'Front-end'), ('iOS', 'iOS'), ('android', 'Android')]
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -15,7 +14,6 @@ class Contributor(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
 class Issue(models.Model):
-    id = models.AutoField(primary_key=True)
     TAG_CHOICES = [('bug', 'Bug'), ('task', 'Task'), ('upgrade', 'Upgrade')]
     PRIORITY_CHOICES = [('low', 'Low'), ('medium', 'Medium'), ('high', 'High')]
     STATUS_CHOICES = [('to-do', 'To Do'), ('in-progress', 'In Progress'), ('done', 'Done')]
@@ -30,7 +28,6 @@ class Issue(models.Model):
 
 
 class Comment(models.Model):
-    id = models.AutoField(primary_key=True)
     description = models.TextField()
     author_user = models.ForeignKey(User, on_delete=models.CASCADE)
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
