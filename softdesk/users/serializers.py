@@ -4,6 +4,12 @@ from django.contrib.auth import get_user_model
 from datetime import date
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer pour le modèle User personnalisé.
+    Gère la sérialisation/désérialisation des utilisateurs avec gestion sécurisée du mot de passe.
+    Valide que l'utilisateur ait au moins 15 ans lors de la création ou mise à jour.
+    """
+
     class Meta:
         model = get_user_model()
         fields = ['id', 'username', "password", 'date_of_birth', 'email', 'can_be_contacted', 'can_data_be_shared']
@@ -12,6 +18,14 @@ class UserSerializer(serializers.ModelSerializer):
         }
 
     def validate_date_of_birth(self, value):
+
+        """
+        Valide la date de naissance pour s'assurer que l'utilisateur a au moins 15 ans.
+        Lève une ValidationError si l'âge est inférieur à 15 ans.
+        """
+
+
+
         today = date.today()
         age = today.year - value.year - ((today.month, today.day) < (value.month, value.day))
         if age < 15:
@@ -19,6 +33,14 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
+
+        """
+        Crée un nouvel utilisateur à partir des données validées.
+        - Extrait le mot de passe pour le hacher correctement.
+        - Crée l'utilisateur avec le mot de passe sécurisé.
+        """
+
+
         password = validated_data.pop('password', None)
         user = self.Meta.model(**validated_data)  # Utilise le model du serializer
         if password:
@@ -27,6 +49,12 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
+
+        """
+        Met à jour un utilisateur existant.
+        - Permet la mise à jour du mot de passe en le hachant correctement.
+        """
+
         password = validated_data.pop('password', None)
         user = super().update(instance, validated_data)
         if password:
