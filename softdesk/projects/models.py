@@ -20,7 +20,7 @@ class Project(models.Model):
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     # L'auteur du projet ; suppression cascade si l'utilisateur est supprimé
-
+    created_time = models.DateTimeField(auto_now_add=True)
 
 class Contributor(models.Model):
     """
@@ -30,7 +30,7 @@ class Contributor(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     # Aucun rôle ou permission ici, mais ce modèle sert de base pour les vérifications d'accès
-
+    created_time = models.DateTimeField(auto_now_add=True)
 
 class Issue(models.Model):
     """
@@ -64,7 +64,7 @@ class Issue(models.Model):
     # L'utilisateur assigné à résoudre l'issue
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     # Projet auquel l'issue appartient
-
+    created_time = models.DateTimeField(auto_now_add=True)
 
 class Comment(models.Model):
     """

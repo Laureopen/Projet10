@@ -16,6 +16,24 @@ class ProjectViewSet(viewsets.ModelViewSet):
         project = serializer.save(author=user)
         Contributor.objects.get_or_create(user=user, project=project)
 
+    def update(self, request, *args, **kwargs):
+        project = self.get_object()
+        if project.author != request.user:
+            return Response({"Message": "Vous n'êtes pas l’auteur de ce projet."}, status=403)
+        return super().update(request, *args, **kwargs)
+
+    def partial_update(self, request, *args, **kwargs):
+        project = self.get_object()
+        if project.author != request.user:
+            return Response({"Message": "Vous n'êtes pas l’auteur de ce projet."}, status=403)
+        return super().partial_update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        project = self.get_object()
+        if project.author != request.user:
+            return Response({"Message": "Vous n'êtes pas l’auteur de ce projet."}, status=403)
+        return super().destroy(request, *args, **kwargs)
+
 
 class ContributorViewSet(viewsets.ModelViewSet):
     queryset = Contributor.objects.all()

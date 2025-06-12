@@ -12,8 +12,11 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = '__all__'
-        read_only_fields = ['author']  # L’auteur est défini automatiquement depuis la vue
+        read_only_fields = ['author', 'created_time']  # L’auteur est défini automatiquement depuis la vue
 
+    def create(self, validated_data):
+        validated_data['author'] = self.context['request'].user
+        return super().create(validated_data)
 
 class ContributorSerializer(serializers.ModelSerializer):
     """
@@ -23,7 +26,7 @@ class ContributorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contributor
         fields = ['user', 'project']
-
+        read_only_fields = ['created_time']
 
 class IssueSerializer(serializers.ModelSerializer):
     """
@@ -34,7 +37,8 @@ class IssueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Issue
-        fields = ['id', 'title', 'description', 'tag', 'priority', 'status', 'assignee_user', 'project']
+        fields = ['id', 'title', 'description', 'tag', 'priority', 'status','assignee_user', 'project', 'created_time']
+        read_only_fields = ['created_time']
 
     def create(self, validated_data):
         """Création avec vérification que l'utilisateur est contributeur"""
