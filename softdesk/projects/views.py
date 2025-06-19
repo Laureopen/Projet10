@@ -4,12 +4,14 @@ from .models import Project, Contributor, Issue, Comment
 from .serializers import ProjectSerializer, ContributorSerializer, IssueSerializer, CommentSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
-
+from django_filters.rest_framework import DjangoFilterBackend
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['author']
 
     def perform_create(self, serializer):
         user = self.request.user
@@ -21,12 +23,6 @@ class ProjectViewSet(viewsets.ModelViewSet):
         if project.author != request.user:
             return Response({"Message": "Vous n'êtes pas l’auteur de ce projet."}, status=403)
         return super().update(request, *args, **kwargs)
-
-    def partial_update(self, request, *args, **kwargs):
-        project = self.get_object()
-        if project.author != request.user:
-            return Response({"Message": "Vous n'êtes pas l’auteur de ce projet."}, status=403)
-        return super().partial_update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         project = self.get_object()
@@ -52,6 +48,8 @@ class IssueViewSet(viewsets.ModelViewSet):
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['assignee_user']
 
     def get_queryset(self):
         project_id = self.kwargs.get('project_pk') or self.request.query_params.get('project')
@@ -84,6 +82,8 @@ class IssueViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['author_user']  # <-- filtrage par auteur
 
     def get_queryset(self):
         issue_id = self.kwargs.get('issue_pk')
