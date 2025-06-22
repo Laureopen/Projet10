@@ -38,3 +38,23 @@ class UserViewSet(viewsets.ModelViewSet):
         data = serializer.data
         data["message"] = "Votre compte a été créé avec succès ! 🎉"
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()
+        if user != request.user:
+            return Response({"Message": "Vous n'avez pas le droit de modifier ce compte."}, status=403)
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        user = self.get_object()
+        if user != request.user:
+            return Response({"Message": "Vous n'avez pas le droit de supprimer ce compte."}, status=403)
+        return super().destroy(request, *args, **kwargs)
+
+
+
+
+
+
