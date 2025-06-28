@@ -126,7 +126,7 @@ class CommentSerializer(serializers.ModelSerializer):
         # Vérification des permissions
         if not Contributor.objects.filter(user=request.user, project=issue.project).exists():
             raise serializers.ValidationError({
-                'detail': "Vous devez être contributeur du projet pour commenter cette issue."
+                'detail': "Vous devez être contributeur du projet pour commenter ou modifier cette issue."
             })
 
         return data
